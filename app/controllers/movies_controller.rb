@@ -11,10 +11,15 @@ class MoviesController < ApplicationController
   end
 
   def index
+    sort = params[:sort]
+    
+    @all_ratings=Movie.all_ratings
+    ratings = params[:ratings]
+    @ratings = ratings.nil? ? @all_ratings : ratings.keys
     if params.include? :sort
-      @movies = Movie.order(params[:sort])
+      @movies = Movie.order(sort).where('rating IN(?)',@ratings).all
     else
-      @movies = Movie.all
+      @movies = Movie.where('rating IN(?)',@ratings).all
     end
   end
 
